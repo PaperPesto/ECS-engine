@@ -1,0 +1,22 @@
+{
+  "name": "ecs-engine",
+  "version": "1.0.0",
+  "description": "Progetto pilota per motore ECS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaperPesto/ECS-engine.git"
+  },
+  "author": "Leonardo Bianchini",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PaperPesto/ECS-engine/issues"
+  },
+  "homepage": "https://github.com/PaperPesto/ECS-engine#readme",
+  "dependencies": {
+    "uuid": "^3.3.2"
+  }
+}
