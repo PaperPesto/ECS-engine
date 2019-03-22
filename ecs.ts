@@ -10,6 +10,10 @@ export class Entity {
         this.id = uuid();
     }
 
+    getComponent(componentName: string){
+        return this.components.find(x => x.name === componentName);
+    }
+
     addComponent(component: Component){
         this.components.push(component);
     }
@@ -22,13 +26,37 @@ export class Entity {
 export class Component {
     name: string;
     value: number;
+    type: ComponentType;
 
-    constructor(name: string, value: number){
+    constructor(type: ComponentType, name: string, value: number){
+        this.type = type;
         this.name = name;
         this.value = value;
     }
 }
 
-export class ForzaSystem {
+export enum ComponentType {
+    Forza,
+    Destrezza,
+    ModificatoreForza
+}
 
+export class System {
+    name: string;
+    entities: Entity[];
+
+    constructor(entities: Entity[], name: string){
+        this.name = name;
+        this.entities = entities;
+    }
+
+    run(): void{
+        for (let entity of this.entities) {
+            console.log('running', entity);
+            let actualComponent = entity.getComponent("Mod_Forza");
+            let actualValue = actualComponent.value;
+
+            //let forzaComponent = 
+        }
+    }
 }
