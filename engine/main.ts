@@ -8,6 +8,7 @@ var parser = new Parser();
 Parser.evaluate('6 * x', { x: 7 }) // 42
 
 // Il system tira fuori la matematica dal component_matematica dell'entità
+// Nel caso più generico sarà un array di [expr, target]
 const component_matematica = {
     expr: '2 * mod_for + 1',
     target: 'forza'
