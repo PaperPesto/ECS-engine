@@ -1,11 +1,11 @@
-import {Entity, Component} from './ecs';
+import {Entity, Component, ComponentType} from './ecs';
 
 // creo l'entity
 //let pg = new Entity("Bardonecchio");
 
 // creo due component
-let forza = new Component("Forza", 16);
-let destrezza = new Component("Destrezza", 12);
+let forza = new Component(ComponentType.Forza, "Forza", 16);
+let destrezza = new Component(ComponentType.Destrezza, "Destrezza", 8);
 
 // Aggancio l'entity ai due component
 // creo un dictionary. qui il nome della caratteristica è una chiave primaria
