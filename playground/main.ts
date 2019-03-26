@@ -1,4 +1,4 @@
-import {Entity, Component, ComponentType} from './ecs';
+import {Entity, Component, ComponentType} from '../ecs';
 
 // creo l'entity
 //let pg = new Entity("Bardonecchio");
