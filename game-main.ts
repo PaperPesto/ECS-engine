@@ -11,15 +11,16 @@ const bardonecchio = new Entity();
 console.log(bardonecchio);
 
 // Creo il component del nome e della forza
-const nameComponent = new Component('nome');
+const bardonecchioNameComponent = new Component('name');
 const forzaComponent = new Component('forza');
 
 // Associo i component al pg
 session.map[bardonecchio.id] = [];
-session.map[bardonecchio.id].push(nameComponent);
+session.map[bardonecchio.id].push(bardonecchioNameComponent);
 session.map[bardonecchio.id].push(forzaComponent);
 console.log('bardonecchio\'s components', session.map[bardonecchio.id]);
 
 // creo il JOAT
 const jackOfAllTrades = new Entity();
 const joatNameComponent = new Component('name');
+const joatModificatoreComponent = new Component('modificatore');
