@@ -1,14 +1,15 @@
 import { ECSSession } from './core/ECSSession';
 import { Entity } from './core/Entity';
 import { Component, ModificatoreComponent, Effect } from './core/Component';
-import { Root_Property } from './core/RootProperty';
+import { RootProperty } from './core/RootProperty';
 
+import filtrex from "./external-libs/filtrex";
 
 // creo la sessione
 const session = new ECSSession();
 
 // creo il pg
-const bardonecchio = new Entity();
+const bardonecchio = new Entity('pg0');
 console.log(bardonecchio);
 
 // Creo il component del nome e della forza
@@ -22,9 +23,14 @@ session.map[bardonecchio.id].push(forzaComponent);
 console.log('bardonecchio\'s components', session.map[bardonecchio.id]);
 
 // creo il JOAT - teoricamente associato a bardonecchio
-const jackOfAllTrades = new Entity();
+const jackOfAllTrades = new Entity('tal0');
 const joatNameComponent = new Component('name', 'Jack of all trades');
-const joatModificatoreComponent = new ModificatoreComponent('modificatore', [new Effect('modifica alla forza', [`$${bardonecchio.id}.name$==\'pippo\'`], '5', ['forza'])]);
+const joatModificatoreComponent = new ModificatoreComponent('modificatore',
+    [
+        new Effect('effetto di test', [`$${bardonecchio.id}.name$==\'pippo\'`], '5', ['forza']),
+        new Effect('modifica la forza', ['true'], '0.5 * forza', ['forza']),
+        new Effect('modifica la destrezza', ['true'], '0.5 * destrezza', ['destrezza'])
+    ]);
 session.map[jackOfAllTrades.id] = [];
 session.map[jackOfAllTrades.id].push(joatNameComponent);
 session.map[jackOfAllTrades.id].push(joatModificatoreComponent);
@@ -46,27 +52,35 @@ console.log('JOAT\'s components', session.map[jackOfAllTrades.id]);
 const effetti = joatModificatoreComponent.effects;
 effetti.forEach(effetto => {
     // 2
+    console.log('effetto', effetto);
+
     const conditions = effetto.conditions;
     conditions.forEach(condition => {
         console.log('condition', condition);
+        let conditionParsed: boolean = false;
 
         // Qui ci sarà una classe che parsa la stringa "name=='pippo'"" e restituisce il component corretto, cioé il component 'name' del pg
-        const parsedKeyValue: Root_Property[] = ParseString_KeyValue(condition);
-        console.log('parsedKeyValue', parsedKeyValue);
+        const parsedKeyValue: RootProperty[] = ParseString_KeyValue(condition);
 
-        parsedKeyValue.forEach(x => {
-            let entity = session.getEntityById(x);
-            let component = session.getComponentByType(x);
-            console.log('component from session', componentsFromSession);
-        });
-        // 27.03.2019 arrivato qui: questo metodo di utility restituisce tutti i component di tipo 'name'. Adesso devo traver un modo di selezionare solo quelli del pg (ancihé anche quello di joat).
-        // Quindi qui sotto avrò a disposizione bardonecchioNameComponent
-        const name = bardonecchioNameComponent.value;
+        if (parsedKeyValue) {
+            console.log('parsedKeyValue', parsedKeyValue);
 
-        // adesso posso valutare la condizione logica della condition $name$==\'pippo\'
-        // Mi serve una classe ad hoc che sostituisce $name$ con il nome giusto
-        // faccio il controllo se ho check oppure no
-        const conditionParsed = `${name === 'pippo'}`;
+            parsedKeyValue.forEach(x => {
+                let entity = session.getEntityById(x.root);
+                let component = session.getComponentsByTypeAndEntityId(x.root, x.property);
+                console.log('entity from session', entity);
+                console.log('component from session', component);
+            });
+
+            // adesso posso valutare la condizione logica della condition $name$==\'pippo\'
+            // Mi serve una classe ad hoc che sostituisce $name$ con il nome giusto
+            // faccio il controllo se ho check oppure no
+
+            // .. rimasto qui
+        } else {
+            // ... rimasto qui
+        }
+
 
         if (conditionParsed) {
             // OK
@@ -97,7 +111,7 @@ function ParseString(input: string): string[] {
     return filtered;
 }
 
-function ParseString_KeyValue(input: string): Root_Property[] {
+function ParseString_KeyValue(input: string): RootProperty[] {
     let split = input.split('$');
     console.log('split', split);
 
@@ -107,10 +121,10 @@ function ParseString_KeyValue(input: string): Root_Property[] {
 
     console.log('filtered', filtered);
 
-    let keyValueArray: Root_Property[] = [];
+    let keyValueArray: RootProperty[] = [];
 
     filtered.forEach(x => {
-        let rp = new Root_Property(x.split('.')[0], x.split('.')[1]);
+        let rp = new RootProperty(x.split('.')[0], x.split('.')[1]);
         keyValueArray.push(rp)
     });
 

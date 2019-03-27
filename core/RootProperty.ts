@@ -1,4 +1,4 @@
-export class Root_Property {
+export class RootProperty {
     root: string;
     property: string;
 
