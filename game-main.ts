@@ -1,6 +1,7 @@
 import { ECSSession } from './core/ECSSession';
 import { Entity } from './core/Entity';
 import { Component, ModificatoreComponent, Effect } from './core/Component';
+import { Root_Property } from './core/RootProperty';
 
 
 // creo la sessione
@@ -23,7 +24,7 @@ console.log('bardonecchio\'s components', session.map[bardonecchio.id]);
 // creo il JOAT - teoricamente associato a bardonecchio
 const jackOfAllTrades = new Entity();
 const joatNameComponent = new Component('name', 'Jack of all trades');
-const joatModificatoreComponent = new ModificatoreComponent('modificatore', [new Effect('modifica alla forza', ['$name$==\'pippo\''], '5', ['forza'])]);
+const joatModificatoreComponent = new ModificatoreComponent('modificatore', [new Effect('modifica alla forza', [`$${bardonecchio.id}.name$==\'pippo\'`], '5', ['forza'])]);
 session.map[jackOfAllTrades.id] = [];
 session.map[jackOfAllTrades.id].push(joatNameComponent);
 session.map[jackOfAllTrades.id].push(joatModificatoreComponent);
@@ -50,11 +51,12 @@ effetti.forEach(effetto => {
         console.log('condition', condition);
 
         // Qui ci sarà una classe che parsa la stringa "name=='pippo'"" e restituisce il component corretto, cioé il component 'name' del pg
-        const parsedName = ParseString(condition);
-        console.log('parsedName', parsedName);
+        const parsedKeyValue: Root_Property[] = ParseString_KeyValue(condition);
+        console.log('parsedKeyValue', parsedKeyValue);
 
-        parsedName.forEach(x => {
-            let componentsFromSession = session.getComponentsByType(x);
+        parsedKeyValue.forEach(x => {
+            let entity = session.getEntityById(x);
+            let component = session.getComponentByType(x);
             console.log('component from session', componentsFromSession);
         });
         // 27.03.2019 arrivato qui: questo metodo di utility restituisce tutti i component di tipo 'name'. Adesso devo traver un modo di selezionare solo quelli del pg (ancihé anche quello di joat).
@@ -83,7 +85,7 @@ effetti.forEach(effetto => {
 
 
 
-// da esternalizzare
+// da esternalizzare ----------------------------------------------
 function ParseString(input: string): string[] {
     let split = input.split('$');
     console.log('split', split);
@@ -93,4 +95,24 @@ function ParseString(input: string): string[] {
     });
 
     return filtered;
+}
+
+function ParseString_KeyValue(input: string): Root_Property[] {
+    let split = input.split('$');
+    console.log('split', split);
+
+    var filtered = split.filter(function (element, index, array) {
+        return ((index + 1) % 2 === 0);
+    });
+
+    console.log('filtered', filtered);
+
+    let keyValueArray: Root_Property[] = [];
+
+    filtered.forEach(x => {
+        let rp = new Root_Property(x.split('.')[0], x.split('.')[1]);
+        keyValueArray.push(rp)
+    });
+
+    return keyValueArray;
 }

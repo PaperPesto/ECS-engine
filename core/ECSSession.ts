@@ -1,6 +1,7 @@
 import { Component } from "./Component";
 
 export class ECSSession {
+    [x: string]: any;
     map: any;
 
     constructor() {
@@ -17,5 +18,20 @@ export class ECSSession {
         });
 
         return components;
+    }
+
+    getComponentsByTypeAndEntityId(type: string, entityId: string) : Component[] {
+
+        return this.map[entityId].filter(x => x.type === type);
+    }
+
+    getEntityById(entityId: string){
+        let ids: string[] = Object.keys(this.map);
+
+        return ids.find(x => x === entityId);
+    }
+
+    getComponentByTypeAndEntityId(componentType: string){
+        // ...
     }
 }
