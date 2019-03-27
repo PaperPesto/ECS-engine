@@ -15,6 +15,11 @@ const nameComponent = new Component('nome');
 const forzaComponent = new Component('forza');
 
 // Associo i component al pg
+session.map[bardonecchio.id] = [];
 session.map[bardonecchio.id].push(nameComponent);
 session.map[bardonecchio.id].push(forzaComponent);
-console.log('sessione', session);
+console.log('bardonecchio\'s components', session.map[bardonecchio.id]);
+
+// creo il JOAT
+const jackOfAllTrades = new Entity();
+const joatNameComponent = new Component('name');
