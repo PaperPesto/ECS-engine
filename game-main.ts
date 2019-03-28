@@ -1,7 +1,7 @@
 import { ECSSession } from './core/ECSSession';
 import { Entity } from './core/Entity';
 import { Component, ModificatoreComponent, Effect } from './core/Component';
-import { RootProperty } from './core/RootProperty';
+import { RootProperty, ParseString_KeyValue } from './utility/Utility.module';
 
 import filtrex from "./external-libs/filtrex";
 
@@ -96,37 +96,3 @@ effetti.forEach(effetto => {
         }
     });
 });
-
-
-
-// da esternalizzare ----------------------------------------------
-function ParseString(input: string): string[] {
-    let split = input.split('$');
-    console.log('split', split);
-
-    var filtered = split.filter(function (element, index, array) {
-        return ((index + 1) % 2 === 0);
-    });
-
-    return filtered;
-}
-
-function ParseString_KeyValue(input: string): RootProperty[] {
-    let split = input.split('$');
-    console.log('split', split);
-
-    var filtered = split.filter(function (element, index, array) {
-        return ((index + 1) % 2 === 0);
-    });
-
-    console.log('filtered', filtered);
-
-    let keyValueArray: RootProperty[] = [];
-
-    filtered.forEach(x => {
-        let rp = new RootProperty(x.split('.')[0], x.split('.')[1]);
-        keyValueArray.push(rp)
-    });
-
-    return keyValueArray;
-}
