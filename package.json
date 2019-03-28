@@ -18,6 +18,7 @@
   "homepage": "https://github.com/PaperPesto/ECS-engine#readme",
   "dependencies": {
     "@types/node": "^11.12.0",
+    "array-to-tree": "^3.3.0",
     "expr-eval": "^1.2.2",
     "jsep": "^0.3.4",
     "uuid": "^3.3.2"
